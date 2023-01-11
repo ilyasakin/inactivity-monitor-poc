@@ -27,6 +27,8 @@ const isKeyPressingTimeout = ref<NodeJS.Timeout | null>(null);
 const isTouching = ref<boolean>(false);
 const isTouchingTimeout = ref<NodeJS.Timeout | null>(null);
 
+let inactivityInterval: NodeJS.Timeout;
+
 const resetInactivityCountdown = () => {
   inactivityCountdown.value = INACTIVITY_THRESHOLD;
 };
@@ -138,7 +140,7 @@ onBeforeMount(() => {
   document.addEventListener('touchstart', onTouchStart);
   document.addEventListener('touchmove', onTouchMove);
   document.addEventListener('touchend', onTouchEnd);
-  setInterval(handleInactivityCountdown, 1000);
+  inactivityInterval = setInterval(handleInactivityCountdown, 1000);
 });
 
 onBeforeUnmount(() => {
@@ -149,6 +151,7 @@ onBeforeUnmount(() => {
   document.removeEventListener('touchstart', onTouchStart);
   document.removeEventListener('touchmove', onTouchMove);
   document.removeEventListener('touchend', onTouchEnd);
+  clearInterval(inactivityInterval);
 });
 </script>
 
